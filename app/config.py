@@ -6,7 +6,7 @@ Secrets never leave this module except through the provider clients;
 
 from functools import lru_cache
 
-from pydantic import Field, SecretStr
+from pydantic import Field, SecretStr, field_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
@@ -29,6 +29,14 @@ class Settings(BaseSettings):
     llm_max_output_tokens: int = Field(default=700, gt=0, le=4096)
 
     rate_limit_per_minute: int = Field(default=30, gt=0, le=1000)
+
+    @field_validator("nvidia_api_key", "gemini_api_key", mode="before")
+    @classmethod
+    def _blank_key_is_unset(cls, value: object) -> object:
+        """An empty NVIDIA_API_KEY= line in .env must not count as configured."""
+        if isinstance(value, str) and not value.strip():
+            return None
+        return value
 
 
 @lru_cache
