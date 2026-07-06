@@ -1,1 +1,163 @@
-<h1>StadiumIQ</h1>
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="StadiumIQ — GenAI operations copilot for FIFA World Cup 2026 venues">
+  <title>StadiumIQ · World Cup 2026 Operations Copilot</title>
+  <link rel="stylesheet" href="/static/styles.css">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%E2%9A%BD%3C/text%3E%3C/svg%3E">
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to main content</a>
+
+  <header class="topbar">
+    <div class="brand">
+      <span class="brand-mark" aria-hidden="true">⚽</span>
+      <div>
+        <h1>Stadium<span class="brand-accent">IQ</span></h1>
+        <p class="brand-sub" id="venue-name">FIFA World Cup 2026 · Operations Copilot</p>
+      </div>
+    </div>
+    <div class="topbar-status">
+      <div class="chip" id="phase-chip" role="status" aria-live="polite">
+        <span class="pulse-dot" aria-hidden="true"></span>
+        <span id="phase-label">Connecting…</span>
+      </div>
+      <div class="chip chip-muted" id="provider-chip" title="Active GenAI provider chain">
+        <span aria-hidden="true">🤖</span>
+        <span id="provider-label">providers…</span>
+      </div>
+      <label class="lang-select">
+        <span class="visually-hidden">Response language</span>
+        <select id="language" aria-label="Response language">
+          <option value="en" selected>🌐 English</option>
+          <option value="es">Español</option>
+          <option value="fr">Français</option>
+          <option value="pt">Português</option>
+          <option value="de">Deutsch</option>
+          <option value="ar">العربية</option>
+          <option value="hi">हिन्दी</option>
+          <option value="ja">日本語</option>
+          <option value="zh">中文</option>
+          <option value="it">Italiano</option>
+        </select>
+      </label>
+    </div>
+  </header>
+
+  <main id="main">
+    <!-- KPI row -->
+    <section class="kpi-row" aria-label="Venue key indicators">
+      <article class="card kpi">
+        <p class="kpi-label">Fans in venue</p>
+        <p class="kpi-value" id="kpi-occupancy">—</p>
+        <p class="kpi-hint" id="kpi-occupancy-hint"></p>
+      </article>
+      <article class="card kpi">
+        <p class="kpi-label">Busiest zone</p>
+        <p class="kpi-value kpi-value-sm" id="kpi-busiest">—</p>
+        <p class="kpi-hint" id="kpi-busiest-hint"></p>
+      </article>
+      <article class="card kpi">
+        <p class="kpi-label">Fastest gate</p>
+        <p class="kpi-value kpi-value-sm" id="kpi-gate">—</p>
+        <p class="kpi-hint" id="kpi-gate-hint"></p>
+      </article>
+      <article class="card kpi">
+        <p class="kpi-label">Active alerts</p>
+        <p class="kpi-value" id="kpi-alerts">—</p>
+        <p class="kpi-hint" id="kpi-alerts-hint"></p>
+      </article>
+    </section>
+
+    <div class="grid">
+      <!-- Crowd intelligence -->
+      <section class="card col-crowd" aria-labelledby="crowd-title">
+        <div class="card-head">
+          <h2 id="crowd-title">Live crowd intelligence</h2>
+          <span class="card-sub" id="crowd-updated"></span>
+        </div>
+        <h3 class="chart-title">Zone density · % of capacity</h3>
+        <div id="zone-chart" class="bar-chart"></div>
+        <h3 class="chart-title">Gate queues · estimated wait</h3>
+        <div id="gate-chart" class="bar-chart"></div>
+        <details class="table-view">
+          <summary>View as table</summary>
+          <table id="crowd-table">
+            <caption class="visually-hidden">Zone occupancy details</caption>
+            <thead><tr><th scope="col">Zone</th><th scope="col">Occupancy</th><th scope="col">Density</th><th scope="col">Status</th></tr></thead>
+            <tbody></tbody>
+          </table>
+        </details>
+      </section>
+
+      <!-- Ops briefing + alerts -->
+      <section class="card col-ops" aria-labelledby="ops-title">
+        <div class="card-head">
+          <h2 id="ops-title">AI operations briefing</h2>
+          <button class="btn btn-primary" id="briefing-btn">Generate briefing</button>
+        </div>
+        <div id="briefing-output" class="briefing" aria-live="polite">
+          <p class="placeholder">Generate a prioritized action briefing for staff &amp; volunteers from the live telemetry — in any supported language.</p>
+        </div>
+        <h3 class="chart-title">Alert feed</h3>
+        <ul id="alert-feed" class="alert-feed" aria-live="polite"></ul>
+      </section>
+
+      <!-- Fan assistant -->
+      <section class="card col-chat" aria-labelledby="chat-title">
+        <div class="card-head">
+          <h2 id="chat-title">Multilingual fan assistant</h2>
+        </div>
+        <div id="chat-log" class="chat-log" aria-live="polite" aria-label="Conversation with the assistant">
+          <div class="msg msg-bot">
+            <p>¡Hola! Welcome to the World Cup 2026. Ask me anything — directions, food, accessibility services, transport — in your language.</p>
+          </div>
+        </div>
+        <form id="chat-form" class="chat-form">
+          <label class="visually-hidden" for="chat-input">Your message</label>
+          <input id="chat-input" type="text" maxlength="1000" required
+                 placeholder="e.g. Where is the nearest accessible restroom?" autocomplete="off">
+          <button class="btn btn-primary" type="submit" id="chat-send">Send</button>
+        </form>
+        <div class="quick-asks" aria-label="Suggested questions">
+          <button class="btn btn-ghost quick" data-q="Where can I get food quickly near Section 101?">🌮 Food nearby</button>
+          <button class="btn btn-ghost quick" data-q="Which gate has the shortest queue right now?">🚪 Fastest gate</button>
+          <button class="btn btn-ghost quick" data-q="How do I reach the metro after the match?">🚇 Transit</button>
+        </div>
+      </section>
+
+      <!-- Navigator -->
+      <section class="card col-nav" aria-labelledby="nav-title">
+        <div class="card-head">
+          <h2 id="nav-title">Step-free navigator</h2>
+        </div>
+        <form id="nav-form" class="nav-form">
+          <label>From
+            <select id="nav-origin" required></select>
+          </label>
+          <label>To
+            <select id="nav-destination" required></select>
+          </label>
+          <label class="toggle">
+            <input type="checkbox" id="nav-accessible">
+            <span>♿ Step-free route only</span>
+          </label>
+          <button class="btn btn-primary" type="submit" id="nav-btn">Find route</button>
+        </form>
+        <div id="nav-result" class="nav-result" aria-live="polite">
+          <p class="placeholder">Pick two places — StadiumIQ computes the shortest walk and narrates it turn-by-turn in your language.</p>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <p>StadiumIQ · GenAI provider chain: NVIDIA NIM → Gemini → offline demo mode · telemetry simulated deterministically for the demo</p>
+  </footer>
+
+  <div id="tooltip" class="tooltip" role="tooltip" hidden></div>
+  <script src="/static/app.js" defer></script>
+</body>
+</html>

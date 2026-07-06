@@ -15,7 +15,8 @@ htmlcov/
 .mypy_cache/
 .ruff_cache/
 
-# OS / editor
+# OS / editor / assistant
 .DS_Store
 .idea/
 .vscode/
+.claude/
