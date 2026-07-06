@@ -2,7 +2,7 @@
 name = "stadiumiq"
 version = "1.0.0"
 description = "GenAI operations copilot for FIFA World Cup 2026 stadiums"
-requires-python = ">=3.11"
+requires-python = ">=3.12"
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

@@ -5,7 +5,9 @@ It gives **fans** a multilingual assistant and step-by-step accessible navigatio
 **organizers, volunteers, and venue staff** live crowd intelligence with AI-generated
 operational briefings and decision support.
 
-![Python](https://img.shields.io/badge/python-3.11+-blue) ![FastAPI](https://img.shields.io/badge/FastAPI-0.115-009688) ![Docker](https://img.shields.io/badge/docker-ready-2496ED) ![Tests](https://img.shields.io/badge/tests-pytest-green)
+![Python](https://img.shields.io/badge/python-3.12%2B-blue) ![FastAPI](https://img.shields.io/badge/FastAPI-0.139-009688) ![Docker](https://img.shields.io/badge/docker-ready-2496ED) ![Tests](https://img.shields.io/badge/tests-41%20passing-green)
+
+![StadiumIQ control-room dashboard](docs/assets/dashboard.png)
 
 ## What it does
 
@@ -64,11 +66,19 @@ tests/           Offline pytest suite (no network, no keys needed)
 docs/            Per-criterion engineering docs (see CLAUDE.md)
 ```
 
-## Documentation map
+## For reviewers — documentation map
 
-- [docs/PROBLEM_STATEMENT.md](docs/PROBLEM_STATEMENT.md) — the challenge, users, and how StadiumIQ targets it
-- [docs/CODE_QUALITY.md](docs/CODE_QUALITY.md) — structure, conventions, design decisions
-- [docs/SECURITY.md](docs/SECURITY.md) — threat model and mitigations
-- [docs/EFFICIENCY.md](docs/EFFICIENCY.md) — resource usage and performance choices
-- [docs/TESTING.md](docs/TESTING.md) — test strategy and how to extend it
-- [docs/ACCESSIBILITY.md](docs/ACCESSIBILITY.md) — WCAG practices + accessibility features
+Each judging dimension has a dedicated engineering doc explaining what we claim
+and where the code backs it (index: [CLAUDE.md](CLAUDE.md)):
+
+| Dimension | Doc | Highlights |
+|---|---|---|
+| Problem statement fit | [docs/PROBLEM_STATEMENT.md](docs/PROBLEM_STATEMENT.md) | Root challenge → feature → code mapping for all target users |
+| Code quality | [docs/CODE_QUALITY.md](docs/CODE_QUALITY.md) | One-way layering, typed domain, DI, data-driven venue map |
+| Security | [docs/SECURITY.md](docs/SECURITY.md) | Prompt-injection fencing, no-`innerHTML` rule, CSP, SecretStr keys, hardened container |
+| Efficiency | [docs/EFFICIENCY.md](docs/EFFICIENCY.md) | Async I/O, LLM caching + rate limits, O(E log V) routing, slim image |
+| Testing | [docs/TESTING.md](docs/TESTING.md) | 41 offline tests in 0.3s; accessibility guarantee enforced as a test |
+| Accessibility | [docs/ACCESSIBILITY.md](docs/ACCESSIBILITY.md) | Verified step-free routing, 10 languages, WCAG-conscious UI |
+
+Continuous integration runs the test matrix (Python 3.12 & 3.14) and a Docker
+build + container health smoke test on every push (`.github/workflows/ci.yml`).

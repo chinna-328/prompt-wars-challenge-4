@@ -39,10 +39,22 @@ class RateLimitMiddleware(BaseHTTPMiddleware):
 
     LIMITED_PREFIXES = ("/api/assistant", "/api/navigate", "/api/ops")
 
+    _PRUNE_EVERY = 1000  # amortized cleanup of idle clients' empty windows
+
     def __init__(self, app, requests_per_minute: int) -> None:
         super().__init__(app)
         self._limit = requests_per_minute
         self._hits: dict[str, deque[float]] = defaultdict(deque)
+        self._requests_seen = 0
+
+    def _prune_idle_clients(self, now: float) -> None:
+        stale = [
+            client
+            for client, hits in self._hits.items()
+            if not hits or now - hits[-1] > _WINDOW_SECONDS
+        ]
+        for client in stale:
+            del self._hits[client]
 
     async def dispatch(self, request: Request, call_next):
         if not request.url.path.startswith(self.LIMITED_PREFIXES):
@@ -50,6 +62,9 @@ class RateLimitMiddleware(BaseHTTPMiddleware):
 
         client = request.client.host if request.client else "unknown"
         now = time.monotonic()
+        self._requests_seen += 1
+        if self._requests_seen % self._PRUNE_EVERY == 0:
+            self._prune_idle_clients(now)
         hits = self._hits[client]
         while hits and now - hits[0] > _WINDOW_SECONDS:
             hits.popleft()
