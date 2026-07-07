@@ -3,8 +3,19 @@ name = "stadiumiq"
 version = "1.0.0"
 description = "GenAI operations copilot for FIFA World Cup 2026 stadiums"
 requires-python = ">=3.12"
+# Mirrors requirements.txt — platforms that resolve from pyproject (e.g. the
+# Vercel Python builder) ignore requirements.txt entirely.
+dependencies = [
+    "fastapi==0.139.0",
+    "uvicorn[standard]==0.50.2",
+    "pydantic==2.13.4",
+    "pydantic-settings==2.14.2",
+    "httpx==0.28.1",
+    "python-dotenv==1.2.2",
+]
 
 [tool.pytest.ini_options]
+pythonpath = ["."]
 testpaths = ["tests"]
 asyncio_mode = "auto"
 addopts = "-q"
