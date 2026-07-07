@@ -14,6 +14,9 @@ SECURITY_HEADERS = {
     "X-Content-Type-Options": "nosniff",
     "X-Frame-Options": "DENY",
     "Referrer-Policy": "no-referrer",
+    # Browsers ignore HSTS over plain http (local dev); it takes effect on
+    # the TLS-terminated production deployment.
+    "Strict-Transport-Security": "max-age=63072000; includeSubDomains",
     "Permissions-Policy": "camera=(), microphone=(), geolocation=()",
     "Content-Security-Policy": (
         "default-src 'self'; img-src 'self' data:; style-src 'self'; "

@@ -27,7 +27,8 @@ API keys, and abuse of the (expensive) GenAI endpoints.
   model output cannot inject markup even if a provider is compromised.
 - Strict `Content-Security-Policy` (no inline script/style, `frame-ancestors
   'none'`) plus `nosniff`, `X-Frame-Options: DENY`, `Referrer-Policy:
-  no-referrer` on **every** response (`app/security.py`).
+  no-referrer`, and `Strict-Transport-Security` on **every** response
+  (`app/security.py`).
 
 ### Secrets
 - Keys live only in environment variables, typed as `SecretStr` so they can't

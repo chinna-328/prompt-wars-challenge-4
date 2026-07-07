@@ -4,7 +4,7 @@
 
 ```bash
 pip install -r requirements-dev.txt
-pytest          # 50 tests, ~0.4s, zero network, zero keys
+pytest          # 54 tests, ~0.4s, zero network, zero keys
 ```
 
 ## Strategy
@@ -24,6 +24,7 @@ Coverage is enforced in CI at a 95% floor (currently 98% of `app/`).
 | Navigation | `tests/test_navigation.py` | Shortest paths, **step-free reachability of every seat from every gate** (the accessibility guarantee, enforced as a test), error types |
 | Crowd engine | `tests/test_crowd.py` | Phase mapping, determinism, density bounds, halftime > play load, alerts reference real zones and carry actions |
 | API | `tests/test_api.py` | Contracts, validation rejects (size/pattern/enum), 404-vs-422 mapping, security headers on every response, rate limit trips at N+1 and spares unmetered routes |
+| Limiter internals | `tests/test_security.py` | Sliding-window expiry re-admits aged-out clients, idle/empty windows are pruned on the amortization boundary, unmetered paths record no state |
 
 ## Why the design is testable
 

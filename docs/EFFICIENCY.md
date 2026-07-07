@@ -43,7 +43,7 @@
 
 ## Measured
 
-Test suite: 50 tests in ~0.4s — the entire request path (routing + telemetry +
+Test suite: 54 tests in ~0.4s — the entire request path (routing + telemetry +
 prompt building + mock completion) runs in well under a millisecond per call,
 leaving upstream LLM latency as the only meaningful cost, which is why the
 caching and rate limiting above target exactly that.
