@@ -80,5 +80,15 @@ and where the code backs it (index: [CLAUDE.md](CLAUDE.md)):
 | Testing | [docs/TESTING.md](docs/TESTING.md) | 41 offline tests in 0.3s; accessibility guarantee enforced as a test |
 | Accessibility | [docs/ACCESSIBILITY.md](docs/ACCESSIBILITY.md) | Verified step-free routing, 10 languages, WCAG-conscious UI |
 
-Continuous integration runs the test matrix (Python 3.12 & 3.14) and a Docker
-build + container health smoke test on every push (`.github/workflows/ci.yml`).
+## CI/CD
+
+Every push runs the full pipeline (`.github/workflows/ci.yml`):
+**ruff** lint + format check → **mypy** type check → **pytest** matrix
+(Python 3.12 & 3.14) → **pip-audit** dependency audit → **Docker** build +
+container health smoke test. On `main`, deployment ships via Vercel's Git
+integration and the pipeline finishes by probing the live `/api/health`
+endpoint. Dependabot keeps pip, Actions, and the base image current.
+
+## License
+
+[MIT](LICENSE)

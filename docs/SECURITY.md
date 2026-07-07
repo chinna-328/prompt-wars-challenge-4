@@ -45,6 +45,12 @@ API keys, and abuse of the (expensive) GenAI endpoints.
 - Upstream timeouts on every provider call; briefings are cached (TTL) so a
   refresh-spamming dashboard cannot fan out into duplicate LLM spend.
 
+### Supply chain
+- CI runs `pip-audit --strict` on every push — a known-vulnerable dependency
+  fails the pipeline (`.github/workflows/ci.yml`).
+- Dependabot watches pip, GitHub Actions, and the Docker base image weekly
+  (`.github/dependabot.yml`); all dependencies are pinned to exact versions.
+
 ### Container
 - Multi-stage image, non-root user (uid 10001), read-only root filesystem,
   `cap_drop: ALL`, `no-new-privileges` (Dockerfile, docker-compose.yml).

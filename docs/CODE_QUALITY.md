@@ -43,6 +43,19 @@ routes  →  services  →  providers
 - CSS custom properties define the design system once (`:root` tokens);
   components consume roles, not raw hex.
 
+## Enforced by CI, not by convention
+
+Quality claims above are machine-checked on every push
+(`.github/workflows/ci.yml`):
+
+- **`ruff check`** with correctness, import-order, naming, modernization,
+  bug-pattern, and simplification rule sets (`pyproject.toml [tool.ruff.lint]`)
+- **`ruff format --check`** — one canonical style, no drift
+- **`mypy app`** — the whole application package type-checks clean
+- **`pytest`** on Python 3.12 and 3.14 — 41 offline tests
+- **`pip-audit`** — no known-vulnerable dependencies
+- **Docker build + container health smoke test**
+
 ## Design decisions worth defending
 
 - **The mock provider is a feature, not a stub.** It guarantees the demo,

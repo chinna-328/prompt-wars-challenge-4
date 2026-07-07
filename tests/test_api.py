@@ -40,9 +40,7 @@ def test_chat_validation_rejects_bad_input(client):
     assert client.post("/api/assistant/chat", json={"message": ""}).status_code == 422
     assert client.post("/api/assistant/chat", json={"message": "x" * 1001}).status_code == 422
     assert (
-        client.post(
-            "/api/assistant/chat", json={"message": "hi", "language": "xx"}
-        ).status_code
+        client.post("/api/assistant/chat", json={"message": "hi", "language": "xx"}).status_code
         == 422
     )
 
@@ -69,9 +67,7 @@ def test_navigate_without_narration_skips_llm(client):
 
 
 def test_navigate_unknown_location_is_404(client):
-    response = client.post(
-        "/api/navigate", json={"origin": "gate_e1", "destination": "narnia"}
-    )
+    response = client.post("/api/navigate", json={"origin": "gate_e1", "destination": "narnia"})
     assert response.status_code == 404
 
 
@@ -98,17 +94,16 @@ def test_security_headers_on_every_response(client):
 
 
 def test_rate_limit_kicks_in(client, monkeypatch):
+    from fastapi.testclient import TestClient
+
     from app.config import get_settings
     from app.main import create_app
-    from fastapi.testclient import TestClient
 
     monkeypatch.setenv("RATE_LIMIT_PER_MINUTE", "3")
     get_settings.cache_clear()
     with TestClient(create_app()) as limited:
         payload = {"message": "hola", "language": "es"}
-        statuses = [
-            limited.post("/api/assistant/chat", json=payload).status_code for _ in range(4)
-        ]
+        statuses = [limited.post("/api/assistant/chat", json=payload).status_code for _ in range(4)]
     get_settings.cache_clear()
     assert statuses[:3] == [200, 200, 200]
     assert statuses[3] == 429

@@ -1,4 +1,4 @@
-name: CI
+name: CI/CD
 
 on:
   push:
@@ -6,7 +6,33 @@ on:
   pull_request:
 
 jobs:
+  lint:
+    name: Lint & format (ruff)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - run: pip install -r requirements-dev.txt
+      - run: ruff check .
+      - run: ruff format --check .
+
+  typecheck:
+    name: Type check (mypy)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - run: pip install -r requirements-dev.txt
+      - run: mypy app
+
   test:
+    name: Tests (py${{ matrix.python-version }})
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -20,7 +46,20 @@ jobs:
       - run: pip install -r requirements-dev.txt
       - run: pytest
 
+  audit:
+    name: Dependency audit (pip-audit)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - run: pip install -r requirements.txt pip-audit
+      - run: pip-audit --strict
+
   docker:
+    name: Docker build & health smoke test
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -34,4 +73,25 @@ jobs:
             sleep 1
           done
           docker logs smoke
+          exit 1
+
+  # Continuous deployment: Vercel's Git integration builds and deploys every
+  # push to main (see vercel.json). This job verifies the deployed app is
+  # actually serving after the pipeline's quality gates pass.
+  verify-deploy:
+    name: Verify production deployment
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    needs: [lint, typecheck, test, docker]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Wait for Vercel deploy, then probe health endpoint
+        run: |
+          for i in $(seq 1 30); do
+            if curl -sf https://prompt-wars-challenge-4.vercel.app/api/health; then
+              echo "deployment healthy"
+              exit 0
+            fi
+            sleep 10
+          done
+          echo "deployment did not become healthy in time"
           exit 1

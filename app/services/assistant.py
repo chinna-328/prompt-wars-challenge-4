@@ -88,7 +88,6 @@ class FanAssistant:
         ]
         user = (
             f"Accessible (step-free) route: {route.accessible}\n"
-            f"Total: {route.total_meters} m, about {route.est_minutes} min.\n"
-            + "\n".join(lines)
+            f"Total: {route.total_meters} m, about {route.est_minutes} min.\n" + "\n".join(lines)
         )
         return await self._chain.complete(system, user)

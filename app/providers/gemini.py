@@ -25,8 +25,7 @@ class GeminiProvider(LLMProvider):
             raise ProviderError("GEMINI_API_KEY not configured")
         key = self._settings.gemini_api_key.get_secret_value()  # type: ignore[union-attr]
         url = (
-            f"{self._settings.gemini_base_url}/models/"
-            f"{self._settings.gemini_model}:generateContent"
+            f"{self._settings.gemini_base_url}/models/{self._settings.gemini_model}:generateContent"
         )
         try:
             response = await self._client.post(

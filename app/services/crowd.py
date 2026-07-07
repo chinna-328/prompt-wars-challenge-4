@@ -15,7 +15,7 @@ from app.services.navigation import StadiumMap
 
 # Match clock, in minutes relative to kickoff.
 TIMELINE_START = -90  # gates open
-TIMELINE_END = 135    # egress complete
+TIMELINE_END = 135  # egress complete
 _TIMELINE_LEN = TIMELINE_END - TIMELINE_START
 
 # Baseline zone fill fraction per match phase.
@@ -41,7 +41,7 @@ class ZoneStatus:
     name: str
     capacity: int
     occupancy: int
-    density: float  # 0.0–1.0+ fraction of capacity
+    density: float  # 0.0-1.0+ fraction of capacity
     status: str
 
 

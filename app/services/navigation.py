@@ -89,7 +89,7 @@ class StadiumMap:
 
         steps: list[RouteStep] = []
         for index, node_id in enumerate(path):
-            node = self.nodes[node_id]
+            node_data = self.nodes[node_id]
             meters = 0
             if index > 0:
                 prior = path[index - 1]
@@ -97,8 +97,8 @@ class StadiumMap:
             steps.append(
                 RouteStep(
                     node_id=node_id,
-                    name=node["name"],
-                    kind=node["kind"],
+                    name=node_data["name"],
+                    kind=node_data["kind"],
                     meters_from_previous=meters,
                 )
             )

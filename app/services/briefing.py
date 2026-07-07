@@ -44,8 +44,7 @@ class BriefingService:
             "match_minute": snapshot.match_minute,
             "phase": snapshot.phase,
             "zones": [
-                {"name": z.name, "density": z.density, "status": z.status}
-                for z in snapshot.zones
+                {"name": z.name, "density": z.density, "status": z.status} for z in snapshot.zones
             ],
             "gates": [
                 {"name": g.name, "queue": g.queue_length, "wait_min": g.wait_minutes}
