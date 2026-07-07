@@ -10,7 +10,7 @@ where the code backs it; keep code and docs in lockstep.
 | Criterion | Impact | Doc | Non-negotiables when editing |
 |---|---|---|---|
 | Problem statement fit | **High** | [docs/PROBLEM_STATEMENT.md](docs/PROBLEM_STATEMENT.md) | Every feature maps to a challenge dimension (navigation, crowd, accessibility, multilingual, ops intelligence); GenAI stays central, grounded in live venue state |
-| Code quality | **High** | [docs/CODE_QUALITY.md](docs/CODE_QUALITY.md) | Layering `routes → services → providers` (deps point one way); typed frozen dataclasses in the domain; DI over globals; comments explain *why* |
+| Code quality | **High** | [docs/CODE_QUALITY.md](docs/CODE_QUALITY.md) + [docs/DESIGN.md](docs/DESIGN.md) (HLD/LLD) | Layering `routes → services → providers` (deps point one way); typed frozen dataclasses in the domain; DI over globals; comments explain *why*; keep DESIGN.md diagrams true to the code |
 | Security | Medium | [docs/SECURITY.md](docs/SECURITY.md) | Pydantic bounds on all input; **no `innerHTML` ever** (textContent only); keys as `SecretStr`, never in URLs or logs; CSP + security headers stay on every response; fan text stays fenced in prompts |
 | Efficiency | Medium | [docs/EFFICIENCY.md](docs/EFFICIENCY.md) | Async I/O with the shared httpx client; LLM calls cached (briefings) and rate-limited; dashboard polls only unmetered endpoints; no framework/bundle added to the frontend |
 | Testing | Low | [docs/TESTING.md](docs/TESTING.md) | Suite stays offline (mock provider path); new features land with tests; the gate→seat step-free reachability test must keep passing |

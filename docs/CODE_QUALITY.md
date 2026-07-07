@@ -1,5 +1,9 @@
 # Code Quality
 
+> Formal HLD/LLD — system context, component, class, and sequence diagrams —
+> lives in [DESIGN.md](DESIGN.md). This doc covers the conventions and their
+> enforcement.
+
 ## Architecture: layered, one direction of dependency
 
 ```

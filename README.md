@@ -66,6 +66,9 @@ tests/           Offline pytest suite (no network, no keys needed)
 docs/            Per-criterion engineering docs (see CLAUDE.md)
 ```
 
+Full HLD & LLD — system context, component/class/sequence diagrams, data
+model, and error taxonomy: [docs/DESIGN.md](docs/DESIGN.md).
+
 ## For reviewers — documentation map
 
 Each judging dimension has a dedicated engineering doc explaining what we claim
