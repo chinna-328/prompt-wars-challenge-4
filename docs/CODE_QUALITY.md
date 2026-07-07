@@ -52,7 +52,7 @@ Quality claims above are machine-checked on every push
   bug-pattern, and simplification rule sets (`pyproject.toml [tool.ruff.lint]`)
 - **`ruff format --check`** — one canonical style, no drift
 - **`mypy app`** — the whole application package type-checks clean
-- **`pytest`** on Python 3.12 and 3.14 — 41 offline tests
+- **`pytest`** on Python 3.12 and 3.14 — 50 offline tests with a 95% coverage floor
 - **`pip-audit`** — no known-vulnerable dependencies
 - **Docker build + container health smoke test**
 

@@ -5,7 +5,7 @@ It gives **fans** a multilingual assistant and step-by-step accessible navigatio
 **organizers, volunteers, and venue staff** live crowd intelligence with AI-generated
 operational briefings and decision support.
 
-![Python](https://img.shields.io/badge/python-3.12%2B-blue) ![FastAPI](https://img.shields.io/badge/FastAPI-0.139-009688) ![Docker](https://img.shields.io/badge/docker-ready-2496ED) ![Tests](https://img.shields.io/badge/tests-41%20passing-green)
+![Python](https://img.shields.io/badge/python-3.12%2B-blue) ![FastAPI](https://img.shields.io/badge/FastAPI-0.139-009688) ![Docker](https://img.shields.io/badge/docker-ready-2496ED) ![Tests](https://img.shields.io/badge/tests-50%20passing-green)
 
 ![StadiumIQ control-room dashboard](docs/assets/dashboard.png)
 
@@ -77,7 +77,7 @@ and where the code backs it (index: [CLAUDE.md](CLAUDE.md)):
 | Code quality | [docs/CODE_QUALITY.md](docs/CODE_QUALITY.md) | One-way layering, typed domain, DI, data-driven venue map |
 | Security | [docs/SECURITY.md](docs/SECURITY.md) | Prompt-injection fencing, no-`innerHTML` rule, CSP, SecretStr keys, hardened container |
 | Efficiency | [docs/EFFICIENCY.md](docs/EFFICIENCY.md) | Async I/O, LLM caching + rate limits, O(E log V) routing, slim image |
-| Testing | [docs/TESTING.md](docs/TESTING.md) | 41 offline tests in 0.3s; accessibility guarantee enforced as a test |
+| Testing | [docs/TESTING.md](docs/TESTING.md) | 50 offline tests in 0.4s, 98% coverage; accessibility guarantee enforced as a test |
 | Accessibility | [docs/ACCESSIBILITY.md](docs/ACCESSIBILITY.md) | Verified step-free routing, 10 languages, WCAG-conscious UI |
 
 ## CI/CD

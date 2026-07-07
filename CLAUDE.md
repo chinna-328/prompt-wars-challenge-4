@@ -20,7 +20,7 @@ where the code backs it; keep code and docs in lockstep.
 
 ```bash
 uvicorn app.main:app --reload    # run (http://localhost:8000)
-pytest                           # 41 offline tests, ~0.3s, no keys needed
+pytest                           # 50 offline tests, ~0.4s, no keys needed
 docker compose up --build        # containerized run
 ```
 

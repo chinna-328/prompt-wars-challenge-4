@@ -4,19 +4,23 @@
 
 ```bash
 pip install -r requirements-dev.txt
-pytest          # 41 tests, ~0.3s, zero network, zero keys
+pytest          # 50 tests, ~0.4s, zero network, zero keys
 ```
 
 ## Strategy
 
 The suite is **offline by construction**: the conftest blanks provider keys, so
 the chain terminates at the deterministic mock — the exact configuration a
-keyless judge deployment runs. No mocking frameworks, no network flakiness, no
-secrets in CI.
+keyless judge deployment runs. The live NVIDIA/Gemini HTTP paths are covered
+too, via `httpx.MockTransport` — request construction and error handling are
+verified without a single network call. No network flakiness, no secrets in CI.
+
+Coverage is enforced in CI at a 95% floor (currently 98% of `app/`).
 
 | Layer | File | What is proven |
 |---|---|---|
 | Provider chain | `tests/test_providers.py` | Ordering, unavailable-skip, fallback on failure, empty-chain guard, mock task recognition |
+| Live-provider HTTP | `tests/test_provider_http.py` | Against a mocked httpx transport: auth header construction, response parsing, timeout/HTTP-error/malformed-body → `ProviderError`, and **the key never appears in a URL** |
 | Navigation | `tests/test_navigation.py` | Shortest paths, **step-free reachability of every seat from every gate** (the accessibility guarantee, enforced as a test), error types |
 | Crowd engine | `tests/test_crowd.py` | Phase mapping, determinism, density bounds, halftime > play load, alerts reference real zones and carry actions |
 | API | `tests/test_api.py` | Contracts, validation rejects (size/pattern/enum), 404-vs-422 mapping, security headers on every response, rate limit trips at N+1 and spares unmetered routes |
