@@ -1,10 +1,12 @@
 /* StadiumIQ dashboard.
    Plain ES modules-free JS, no build step. All dynamic text is inserted via
    textContent / createElement — never innerHTML — so API/LLM output cannot
-   inject markup (XSS-safe by construction). */
+   inject markup (XSS-safe by construction). SVG marks are built with
+   createElementNS + attributes; styling stays in the stylesheet (strict CSP). */
 "use strict";
 
 const $ = (id) => document.getElementById(id);
+const SVG_NS = "http://www.w3.org/2000/svg";
 const language = () => $("language").value;
 
 const PHASE_LABELS = {
@@ -59,8 +61,70 @@ function attachTooltip(el, title, body) {
   el.addEventListener("mouseenter", show);
   el.addEventListener("mousemove", position);
   el.addEventListener("mouseleave", () => (tooltip.hidden = true));
-  el.addEventListener("focus", (e) => show({ clientX: 40, clientY: 40 }));
+  el.addEventListener("focus", () => show({ clientX: 40, clientY: 40 }));
   el.addEventListener("blur", () => (tooltip.hidden = true));
+}
+
+/* ---------------- KPI micro-viz (SVG, real telemetry) ---------------- */
+
+const HISTORY_LIMIT = 24;
+const occupancyHistory = [];
+const gateWaitHistory = [];
+
+function pushHistory(series, value) {
+  series.push(value);
+  if (series.length > HISTORY_LIMIT) series.shift();
+}
+
+/* Sparkline over a rolling window of poll samples. Decorative duplicate of
+   the numbers beside it (aria-hidden); the table view carries the data. */
+function drawSparkline(svgId, values) {
+  const svg = $(svgId);
+  svg.replaceChildren();
+  if (values.length < 2) return;
+  const w = 120;
+  const h = 36;
+  const pad = 3;
+  const min = Math.min(...values);
+  const max = Math.max(...values);
+  const span = max - min || 1;
+  const step = (w - pad * 2) / (values.length - 1);
+  const pts = values.map((v, i) => {
+    const x = pad + i * step;
+    const y = h - pad - ((v - min) / span) * (h - pad * 2);
+    return [x, y];
+  });
+  const joined = pts.map(([x, y]) => `${x.toFixed(1)},${y.toFixed(1)}`).join(" ");
+
+  const area = document.createElementNS(SVG_NS, "polygon");
+  area.setAttribute("class", "spark-area");
+  area.setAttribute("points", `${pad},${h - pad} ${joined} ${(pad + (values.length - 1) * step).toFixed(1)},${h - pad}`);
+
+  const line = document.createElementNS(SVG_NS, "polyline");
+  line.setAttribute("class", "spark-line");
+  line.setAttribute("points", joined);
+
+  const [lastX, lastY] = pts[pts.length - 1];
+  const dot = document.createElementNS(SVG_NS, "circle");
+  dot.setAttribute("class", "spark-dot");
+  dot.setAttribute("cx", lastX.toFixed(1));
+  dot.setAttribute("cy", lastY.toFixed(1));
+  dot.setAttribute("r", "2.5");
+
+  svg.append(area, line, dot);
+}
+
+function drawDonut(percent) {
+  const clamped = Math.max(0, Math.min(100, Math.round(percent)));
+  $("donut-fill").setAttribute("stroke-dasharray", `${clamped} ${100 - clamped}`);
+  $("donut-text").textContent = `${clamped}%`;
+}
+
+function setAlertShield(alerts) {
+  const shield = $("alert-shield");
+  const critical = alerts.some((a) => a.severity === "critical");
+  shield.classList.toggle("shield-critical", critical);
+  shield.classList.toggle("shield-alert", !critical && alerts.length > 0);
 }
 
 /* ---------------- Bar chart builder ---------------- */
@@ -130,6 +194,14 @@ function renderCrowd(snapshot) {
   const critical = snapshot.alerts.filter((a) => a.severity === "critical").length;
   $("kpi-alerts-hint").textContent =
     critical ? `${critical} critical` : snapshot.alerts.length ? "warnings only" : "all clear";
+
+  // KPI micro-viz
+  pushHistory(occupancyHistory, totalOcc);
+  pushHistory(gateWaitHistory, fastest.wait_minutes);
+  drawSparkline("spark-occupancy", occupancyHistory);
+  drawSparkline("spark-gate", gateWaitHistory);
+  drawDonut(busiest.density * 100);
+  setAlertShield(snapshot.alerts);
 
   // Zone chart
   const zoneChart = $("zone-chart");
@@ -205,16 +277,58 @@ function renderCrowd(snapshot) {
     );
   }
 
-  $("crowd-updated").textContent = `updated ${new Date().toLocaleTimeString()}`;
+  const stamp = new Date().toLocaleTimeString();
+  $("crowd-updated").textContent = `updated ${stamp}`;
+  $("sys-updated").textContent = stamp;
+
+  const worst = snapshot.alerts.length ? (critical ? "degraded" : "advisories") : "operational";
+  $("sys-status").textContent = "All systems";
+  $("sys-substatus").textContent = worst;
 }
 
 async function refreshCrowd() {
   try {
-    renderCrowd(await api("/api/crowd/status"));
+    const started = performance.now();
+    const snapshot = await api("/api/crowd/status");
+    $("latency").textContent = `${Math.max(1, Math.round(performance.now() - started))} ms`;
+    renderCrowd(snapshot);
   } catch {
     $("phase-label").textContent = "telemetry offline";
+    $("sys-substatus").textContent = "telemetry offline";
   }
 }
+
+/* Seed the sparklines with the minutes leading up to "now" — telemetry is a
+   deterministic function of the match clock, so history is queryable. */
+async function seedHistory() {
+  const started = performance.now();
+  const current = await api("/api/crowd/status");
+  $("latency").textContent = `${Math.max(1, Math.round(performance.now() - started))} ms`;
+  const minute = current.match_minute;
+  const minutes = [];
+  for (let m = minute - 14; m < minute; m += 2) {
+    if (m >= -90) minutes.push(m);
+  }
+  const snapshots = await Promise.all(
+    minutes.map((m) => api(`/api/crowd/status?match_minute=${m}`).catch(() => null))
+  );
+  for (const snap of snapshots) {
+    if (!snap) continue;
+    pushHistory(occupancyHistory, snap.zones.reduce((s, z) => s + z.occupancy, 0));
+    const fastest = [...snap.gates].sort((a, b) => a.wait_minutes - b.wait_minutes)[0];
+    pushHistory(gateWaitHistory, fastest.wait_minutes);
+  }
+  renderCrowd(current);
+}
+
+/* ---------------- Sidebar section links ---------------- */
+
+document.querySelectorAll(".side-link").forEach((link) =>
+  link.addEventListener("click", () => {
+    document.querySelectorAll(".side-link").forEach((l) => l.removeAttribute("aria-current"));
+    link.setAttribute("aria-current", "page");
+  })
+);
 
 /* ---------------- Ops briefing ---------------- */
 
@@ -242,7 +356,7 @@ $("briefing-btn").addEventListener("click", async () => {
     out.append(p);
   } finally {
     btn.disabled = false;
-    btn.textContent = "Generate briefing";
+    btn.textContent = "✦ Generate briefing";
   }
 });
 
@@ -322,6 +436,12 @@ async function populateNavigator() {
   $("nav-origin").value = "gate_e1";
   $("nav-destination").value = "sec_201";
 }
+
+$("nav-swap").addEventListener("click", () => {
+  const origin = $("nav-origin");
+  const destination = $("nav-destination");
+  [origin.value, destination.value] = [destination.value, origin.value];
+});
 
 $("nav-form").addEventListener("submit", async (event) => {
   event.preventDefault();
@@ -405,11 +525,20 @@ $("nav-form").addEventListener("submit", async (event) => {
 async function boot() {
   try {
     const health = await api("/api/health");
-    $("provider-label").textContent = health.active_providers.join(" → ");
+    const chain = health.active_providers.join(" → ");
+    $("provider-label").textContent = chain;
+    $("footer-chain").textContent =
+      health.active_providers.length === 1 && health.active_providers[0] === "mock"
+        ? `${chain} · offline demo mode`
+        : `${chain} · live GenAI`;
   } catch {
     $("provider-label").textContent = "api offline";
+    $("sys-substatus").textContent = "api offline";
   }
-  await Promise.all([refreshCrowd(), populateNavigator().catch(() => {})]);
+  await Promise.all([
+    seedHistory().catch(() => refreshCrowd()),
+    populateNavigator().catch(() => {}),
+  ]);
   setInterval(refreshCrowd, 10_000);
 }
 

@@ -38,9 +38,16 @@ correctly because text is inserted as plain text nodes.
 - **Motion & preferences:** `prefers-reduced-motion` disables all animation;
   `color-scheme: dark` keeps native widgets consistent; layout is responsive
   down to phone widths (volunteers work on phones).
-- **Contrast:** ink tokens (#fff / #c3c2b7 on #1a1a19) exceed 4.5:1; the
-  palette follows a CVD-validated reference (categorical blue, reserved status
-  hues with icon+label mitigation).
+- **Contrast (computed, not eyeballed):** ink tokens #eef2fa / #b6c2d9 on the
+  #0b1120 card surface measure 16.8:1 and 10.5:1 (≥ 4.5:1 required); series
+  blue #3b82f6 measures 5.1:1 against the surface (≥ 3:1 for marks); button
+  text is white on #2563eb at 5.2:1. Status hues are the reserved dataviz set,
+  all ≥ 3:1 here, always paired with icon + label.
+- **KPI micro-charts are annotated duplicates:** sparklines and the density
+  donut are `aria-hidden` decorations of values that sit beside them as text,
+  and the full data table remains the canonical non-visual view.
+- **Step-free routing is the default:** the navigator's "step-free route only"
+  toggle ships checked — accessible routing is opt-out, not opt-in.
 
 ## Environments
 
