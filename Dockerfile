@@ -1,11 +1,11 @@
 # StadiumIQ — multi-stage build: deps compiled in a builder layer,
 # runtime runs as a non-root user on a slim base.
-FROM python:3.12-slim AS builder
+FROM python:3.14-slim AS builder
 WORKDIR /build
 COPY requirements.txt .
 RUN pip install --no-cache-dir --prefix=/install -r requirements.txt
 
-FROM python:3.12-slim
+FROM python:3.14-slim
 LABEL org.opencontainers.image.title="StadiumIQ" \
       org.opencontainers.image.description="GenAI operations copilot for FIFA World Cup 2026 venues"
 
