@@ -27,6 +27,8 @@ class NoRouteError(ValueError):
 
 @dataclass(frozen=True, slots=True)
 class RouteStep:
+    """One waypoint on a route, with the leg distance from the previous step."""
+
     node_id: str
     name: str
     kind: str
@@ -35,6 +37,8 @@ class RouteStep:
 
 @dataclass(frozen=True, slots=True)
 class Route:
+    """A complete computed route: ordered steps plus distance/time totals."""
+
     steps: list[RouteStep]
     total_meters: int
     est_minutes: int
@@ -55,6 +59,12 @@ class StadiumMap:
             self._adjacency[edge["b"]].append((edge["a"], edge["meters"], edge["step_free"]))
 
     def find_route(self, origin: str, destination: str, accessible: bool = False) -> Route:
+        """Shortest walkway path between two nodes (Dijkstra over meters).
+
+        With `accessible=True`, edges involving stairs are excluded, so the
+        result is verified step-free. Raises UnknownLocationError for ids not
+        on the map and NoRouteError when no path satisfies the constraint.
+        """
         for node_id in (origin, destination):
             if node_id not in self.nodes:
                 raise UnknownLocationError(f"Unknown location: {node_id}")

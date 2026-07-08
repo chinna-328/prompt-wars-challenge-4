@@ -72,6 +72,7 @@ class CrowdSnapshot:
 
 
 def phase_for(minute: int) -> str:
+    """Map a match-clock minute onto the six operational phases of a match day."""
     if minute < -15:
         return "ingress"
     if minute < 0:
@@ -91,6 +92,8 @@ def _wave(minute: int, salt: int) -> float:
 
 
 class CrowdService:
+    """Deterministic crowd-telemetry source keyed to the match clock."""
+
     def __init__(self, stadium: StadiumMap) -> None:
         self._stadium = stadium
 
@@ -100,6 +103,7 @@ class CrowdService:
         return TIMELINE_START + (elapsed % _TIMELINE_LEN)
 
     def snapshot(self, match_minute: int | None = None) -> CrowdSnapshot:
+        """Zone densities, gate queues, and alerts for a given (or current) minute."""
         minute = self.current_match_minute() if match_minute is None else match_minute
         minute = max(TIMELINE_START, min(TIMELINE_END, minute))
         phase = phase_for(minute)
@@ -152,6 +156,7 @@ class CrowdService:
 
     @staticmethod
     def _derive_alerts(zones: list[ZoneStatus], gates: list[GateStatus]) -> list[Alert]:
+        """Turn raw densities/queues into actionable, severity-ranked alerts."""
         alerts: list[Alert] = []
         for zone in zones:
             if zone.status == "critical":

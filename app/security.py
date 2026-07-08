@@ -26,6 +26,8 @@ SECURITY_HEADERS = {
 
 
 class SecurityHeadersMiddleware(BaseHTTPMiddleware):
+    """Stamp the hardening header set onto every response, static or API."""
+
     async def dispatch(self, request: Request, call_next):
         response = await call_next(request)
         response.headers.update(SECURITY_HEADERS)
@@ -51,6 +53,7 @@ class RateLimitMiddleware(BaseHTTPMiddleware):
         self._requests_seen = 0
 
     def _prune_idle_clients(self, now: float) -> None:
+        """Drop clients whose window is empty or fully expired (memory hygiene)."""
         stale = [
             client
             for client, hits in self._hits.items()
@@ -60,6 +63,7 @@ class RateLimitMiddleware(BaseHTTPMiddleware):
             del self._hits[client]
 
     async def dispatch(self, request: Request, call_next):
+        """Admit or reject (429 + Retry-After) based on the client's window."""
         if not request.url.path.startswith(self.LIMITED_PREFIXES):
             return await call_next(request)
 

@@ -34,12 +34,16 @@ _CHAT = (
 
 
 class MockProvider(LLMProvider):
+    """Zero-dependency terminator of the provider chain — always available."""
+
     name = "mock"
 
     def available(self) -> bool:
+        """Always true: this provider needs no keys and no network."""
         return True
 
     async def complete(self, system: str, user: str) -> Completion:
+        """Pick a canned reply by recognizing the task from the system prompt."""
         lowered = system.lower()
         if "operations briefing" in lowered:
             text = _BRIEFING

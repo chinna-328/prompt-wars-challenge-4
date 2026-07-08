@@ -30,11 +30,14 @@ _MINUTE_BUCKET = 5
 
 
 class BriefingService:
+    """Generates (and caches) LLM operations briefings from telemetry."""
+
     def __init__(self, chain: ProviderChain) -> None:
         self._chain = chain
         self._cache: dict[tuple[int, str], tuple[float, Completion]] = {}
 
     async def generate(self, snapshot: CrowdSnapshot, language: str = "en") -> Completion:
+        """Produce a staff briefing for this snapshot, serving cache when fresh."""
         key = (snapshot.match_minute // _MINUTE_BUCKET, language)
         cached = self._cache.get(key)
         if cached and time.monotonic() - cached[0] < _CACHE_TTL_SECONDS:

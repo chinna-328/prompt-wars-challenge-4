@@ -22,6 +22,8 @@ const STATUS_ICONS = { low: "✓", moderate: "•", high: "▲", critical: "⛔"
 
 /* ---------------- API helper ---------------- */
 
+/* Single fetch wrapper: JSON in/out, and server `detail` messages become
+   Error messages so every catch block can show a human-readable reason. */
 async function api(path, options = {}) {
   const response = await fetch(path, {
     headers: { "Content-Type": "application/json" },
@@ -38,6 +40,8 @@ async function api(path, options = {}) {
 
 const tooltip = $("tooltip");
 
+/* One shared tooltip node, repositioned per target. Shows on hover *and*
+   keyboard focus so the chart details are reachable without a mouse. */
 function attachTooltip(el, title, body) {
   const show = (event) => {
     tooltip.replaceChildren();
@@ -71,6 +75,7 @@ const HISTORY_LIMIT = 24;
 const occupancyHistory = [];
 const gateWaitHistory = [];
 
+/* Append a sample, capping the series at the sparkline's window size. */
 function pushHistory(series, value) {
   series.push(value);
   if (series.length > HISTORY_LIMIT) series.shift();
@@ -114,12 +119,15 @@ function drawSparkline(svgId, values) {
   svg.append(area, line, dot);
 }
 
+/* Density donut: the SVG circle has pathLength=100, so the dasharray is
+   simply "<percent> <remainder>" — no circumference math needed. */
 function drawDonut(percent) {
   const clamped = Math.max(0, Math.min(100, Math.round(percent)));
   $("donut-fill").setAttribute("stroke-dasharray", `${clamped} ${100 - clamped}`);
   $("donut-text").textContent = `${clamped}%`;
 }
 
+/* Tint the alert KPI's shield icon by the worst active severity. */
 function setAlertShield(alerts) {
   const shield = $("alert-shield");
   const critical = alerts.some((a) => a.severity === "critical");
@@ -129,6 +137,8 @@ function setAlertShield(alerts) {
 
 /* ---------------- Bar chart builder ---------------- */
 
+/* One labeled, focusable bar. The track carries role="img" + aria-label so
+   screen readers get name, value, and status without parsing the visuals. */
 function barRow({ name, fraction, valueLabel, status, tooltipBody }) {
   const row = document.createElement("div");
   row.className = "bar-row";
@@ -170,6 +180,8 @@ function barRow({ name, fraction, valueLabel, status, tooltipBody }) {
 
 /* ---------------- Crowd dashboard ---------------- */
 
+/* Render one telemetry snapshot everywhere it appears: KPI tiles, micro-viz,
+   both bar charts, the accessible table view, and the alert feed. */
 function renderCrowd(snapshot) {
   $("phase-label").textContent =
     `${PHASE_LABELS[snapshot.phase] || snapshot.phase} · min ${snapshot.match_minute}`;
@@ -286,6 +298,7 @@ function renderCrowd(snapshot) {
   $("sys-substatus").textContent = worst;
 }
 
+/* 10-second poll of the unmetered telemetry endpoint (never the LLM ones). */
 async function refreshCrowd() {
   try {
     const started = performance.now();
@@ -362,6 +375,8 @@ $("briefing-btn").addEventListener("click", async () => {
 
 /* ---------------- Fan assistant chat ---------------- */
 
+/* Append a chat bubble. Text lands via textContent (never innerHTML), so
+   LLM output can't inject markup even if a provider were compromised. */
 function addMessage(kind, text, meta) {
   const log = $("chat-log");
   const div = document.createElement("div");
@@ -380,6 +395,8 @@ function addMessage(kind, text, meta) {
   return div;
 }
 
+/* Optimistic send: show the user's bubble and a "Thinking…" placeholder,
+   then swap the placeholder for the reply (or the error) in place. */
 async function sendChat(message) {
   addMessage("user", message);
   const pending = addMessage("bot", "Thinking…");
@@ -419,6 +436,8 @@ document.querySelectorAll(".quick").forEach((btn) =>
 
 /* ---------------- Navigator ---------------- */
 
+/* Fill both origin/destination selects from the venue map, alphabetized,
+   with a sensible default journey (arrival gate → a seating section). */
 async function populateNavigator() {
   const map = await api("/api/stadium/map");
   $("venue-name").textContent = `${map.venue}`;
@@ -522,6 +541,8 @@ $("nav-form").addEventListener("submit", async (event) => {
 
 /* ---------------- Boot ---------------- */
 
+/* Startup: read provider health for the header/footer badges, seed the
+   sparklines from simulated history, then start the telemetry poll. */
 async function boot() {
   try {
     const health = await api("/api/health");

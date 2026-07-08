@@ -54,6 +54,7 @@ The route data is authoritative — do not add or remove steps.
 
 
 def _summarize_state(snapshot: CrowdSnapshot) -> str:
+    """Render the crowd snapshot as compact prose for the system prompt."""
     zones = "; ".join(f"{z.name}: {z.status} ({z.density:.0%})" for z in snapshot.zones)
     gates = "; ".join(f"{g.name}: ~{g.wait_minutes} min wait" for g in snapshot.gates)
     return (
@@ -64,11 +65,14 @@ def _summarize_state(snapshot: CrowdSnapshot) -> str:
 
 
 class FanAssistant:
+    """Builds grounded, injection-fenced prompts for fan chat and narration."""
+
     def __init__(self, chain: ProviderChain, stadium: StadiumMap) -> None:
         self._chain = chain
         self._stadium = stadium
 
     async def chat(self, message: str, language: str, snapshot: CrowdSnapshot) -> Completion:
+        """Answer a fan question in their language, grounded in live venue state."""
         system = _CHAT_SYSTEM.format(
             venue=self._stadium.venue,
             language=SUPPORTED_LANGUAGES[language],
@@ -78,6 +82,7 @@ class FanAssistant:
         return await self._chain.complete(system, user)
 
     async def narrate_route(self, route: Route, language: str) -> Completion:
+        """Turn a computed route into friendly turn-by-turn directions."""
         system = _NARRATOR_SYSTEM.format(
             venue=self._stadium.venue,
             language=SUPPORTED_LANGUAGES[language],

@@ -36,6 +36,11 @@ routes  →  services  →  providers
 - **Comments explain *why*, not *what*** — e.g. why the API key travels in a
   header, why the mock provider terminates the chain, why blank env keys are
   normalized to unset.
+- **Docstrings on every public callable.** Modules, classes, route handlers
+  (surfaced in the OpenAPI docs), service methods, and frontend functions all
+  state their purpose and contract in one or two lines.
+- **No suppressions.** The codebase carries zero `# type: ignore` / `# noqa`
+  comments — optional values are narrowed explicitly instead of silenced.
 - **Naming is domain language**: `phase_for`, `find_route`, `narrate_route`,
   `active_names` — readable as prose.
 

@@ -11,6 +11,8 @@ logger = logging.getLogger(__name__)
 
 
 class GeminiProvider(LLMProvider):
+    """Backup provider: Gemini's REST generateContent endpoint."""
+
     name = "gemini"
 
     def __init__(self, settings: Settings, client: httpx.AsyncClient) -> None:
@@ -18,12 +20,17 @@ class GeminiProvider(LLMProvider):
         self._client = client
 
     def available(self) -> bool:
+        """Configured iff GEMINI_API_KEY is set (blank values count as unset)."""
         return self._settings.gemini_api_key is not None
 
     async def complete(self, system: str, user: str) -> Completion:
-        if not self.available():
+        """POST a generateContent request; any failure becomes ProviderError."""
+        # Narrow the optional key locally so the None case is handled
+        # explicitly instead of being silenced with a suppression comment.
+        api_key = self._settings.gemini_api_key
+        if api_key is None:
             raise ProviderError("GEMINI_API_KEY not configured")
-        key = self._settings.gemini_api_key.get_secret_value()  # type: ignore[union-attr]
+        key = api_key.get_secret_value()
         url = (
             f"{self._settings.gemini_base_url}/models/{self._settings.gemini_model}:generateContent"
         )

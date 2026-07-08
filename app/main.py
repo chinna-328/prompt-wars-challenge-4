@@ -24,6 +24,7 @@ _STATIC_DIR = Path(__file__).resolve().parent.parent / "static"
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
+    """Build all services once at startup and share them via app.state."""
     settings = get_settings()
     logging.basicConfig(level=settings.log_level)
 
@@ -43,6 +44,7 @@ async def lifespan(app: FastAPI):
 
 
 def create_app() -> FastAPI:
+    """Assemble the app: middleware, API router, and the static dashboard."""
     settings = get_settings()
     app = FastAPI(
         title="StadiumIQ",
