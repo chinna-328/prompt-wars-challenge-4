@@ -18,9 +18,15 @@ SECURITY_HEADERS = {
     # the TLS-terminated production deployment.
     "Strict-Transport-Security": "max-age=63072000; includeSubDomains",
     "Permissions-Policy": "camera=(), microphone=(), geolocation=()",
+    # Cross-origin isolation: no other origin may open or embed this app's
+    # resources, closing off window-reference and cross-site-leak channels.
+    "Cross-Origin-Opener-Policy": "same-origin",
+    "Cross-Origin-Resource-Policy": "same-origin",
     "Content-Security-Policy": (
         "default-src 'self'; img-src 'self' data:; style-src 'self'; "
-        "script-src 'self'; connect-src 'self'; frame-ancestors 'none'"
+        "script-src 'self'; connect-src 'self'; frame-ancestors 'none'; "
+        # No <base> retargeting, no plugin content, forms post only to us.
+        "base-uri 'none'; object-src 'none'; form-action 'self'"
     ),
 }
 

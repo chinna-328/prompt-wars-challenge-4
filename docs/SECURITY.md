@@ -26,9 +26,12 @@ API keys, and abuse of the (expensive) GenAI endpoints.
   output — is rendered via `textContent`/`createElement` (`static/app.js`), so
   model output cannot inject markup even if a provider is compromised.
 - Strict `Content-Security-Policy` (no inline script/style, `frame-ancestors
-  'none'`) plus `nosniff`, `X-Frame-Options: DENY`, `Referrer-Policy:
-  no-referrer`, and `Strict-Transport-Security` on **every** response
-  (`app/security.py`).
+  'none'`, `base-uri 'none'`, `object-src 'none'`, `form-action 'self'`) plus
+  `nosniff`, `X-Frame-Options: DENY`, `Referrer-Policy: no-referrer`,
+  `Strict-Transport-Security`, and cross-origin isolation
+  (`Cross-Origin-Opener-Policy` / `Cross-Origin-Resource-Policy:
+  same-origin`) on **every** response (`app/security.py`); the header set is
+  asserted by tests.
 
 ### Secrets
 - Keys live only in environment variables, typed as `SecretStr` so they can't
@@ -45,6 +48,10 @@ API keys, and abuse of the (expensive) GenAI endpoints.
   (429 + `Retry-After`); telemetry reads stay unmetered (`app/security.py`).
 - Upstream timeouts on every provider call; briefings are cached (TTL) so a
   refresh-spamming dashboard cannot fan out into duplicate LLM spend.
+
+### Disclosure
+- A root [`SECURITY.md`](../SECURITY.md) (GitHub-recognized) defines the
+  private vulnerability-reporting channel and what's in scope.
 
 ### Supply chain
 - CI runs `pip-audit --strict` on every push — a known-vulnerable dependency

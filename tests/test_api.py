@@ -90,7 +90,12 @@ def test_security_headers_on_every_response(client):
         headers = client.get(path).headers
         assert headers["X-Content-Type-Options"] == "nosniff"
         assert headers["X-Frame-Options"] == "DENY"
-        assert "Content-Security-Policy" in headers
+        assert headers["Cross-Origin-Opener-Policy"] == "same-origin"
+        assert headers["Cross-Origin-Resource-Policy"] == "same-origin"
+        assert "max-age=" in headers["Strict-Transport-Security"]
+        csp = headers["Content-Security-Policy"]
+        for directive in ("default-src 'self'", "base-uri 'none'", "object-src 'none'"):
+            assert directive in csp
 
 
 def test_rate_limit_kicks_in(client, monkeypatch):
