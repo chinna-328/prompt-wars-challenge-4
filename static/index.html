@@ -48,32 +48,32 @@
     </header>
 
     <aside class="sidebar">
-      <nav class="side-nav" aria-label="Dashboard sections">
-        <a class="side-link" href="#main" aria-current="page">
+      <nav class="side-nav" aria-label="Pages">
+        <a class="side-link" href="#/overview" aria-current="page">
           <svg class="side-icon" aria-hidden="true" viewBox="0 0 24 24"><rect x="3" y="3" width="8" height="8" rx="2"/><rect x="13" y="3" width="8" height="8" rx="2"/><rect x="3" y="13" width="8" height="8" rx="2"/><rect x="13" y="13" width="8" height="8" rx="2"/></svg>
           <span>Overview</span>
         </a>
-        <a class="side-link" href="#crowd-card">
+        <a class="side-link" href="#/crowd">
           <svg class="side-icon" aria-hidden="true" viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c.6-3.5 3.2-5.5 6.5-5.5s5.9 2 6.5 5.5"/><circle cx="17.5" cy="9.5" r="2.5"/><path d="M16 14.7c2.9.2 5 2 5.5 4.8"/></svg>
           <span>Crowd intelligence</span>
         </a>
-        <a class="side-link" href="#gate-section">
+        <a class="side-link" href="#/gates">
           <svg class="side-icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M4 21V5a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v16"/><path d="M2 21h20M9 3v18M15 3v18"/></svg>
           <span>Gate management</span>
         </a>
-        <a class="side-link" href="#ops-card">
+        <a class="side-link" href="#/briefings">
           <svg class="side-icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M12 3l1.7 4.3L18 9l-4.3 1.7L12 15l-1.7-4.3L6 9l4.3-1.7z"/><path d="M18.5 15l.9 2.1 2.1.9-2.1.9-.9 2.1-.9-2.1-2.1-.9 2.1-.9z"/></svg>
           <span>AI briefings</span>
         </a>
-        <a class="side-link" href="#alert-section">
+        <a class="side-link" href="#/alerts">
           <svg class="side-icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 9a6 6 0 1 1 12 0c0 5 2 6 2 6H4s2-1 2-6"/><path d="M10 20a2 2 0 0 0 4 0"/></svg>
           <span>Alerts</span>
         </a>
-        <a class="side-link" href="#chat-card">
+        <a class="side-link" href="#/assistant">
           <svg class="side-icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M21 12a8 8 0 0 1-8 8H4l2.2-2.9A8 8 0 1 1 21 12z"/><path d="M9 12h.01M12.5 12h.01M16 12h.01"/></svg>
           <span>Assistant</span>
         </a>
-        <a class="side-link" href="#nav-card">
+        <a class="side-link" href="#/navigator">
           <svg class="side-icon" aria-hidden="true" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M15.5 8.5l-2 5-5 2 2-5z"/></svg>
           <span>Step-free navigator</span>
         </a>
@@ -89,64 +89,112 @@
     </aside>
 
     <main id="main">
-      <!-- KPI row -->
-      <section class="kpi-row" aria-label="Venue key indicators">
-        <article class="card kpi">
-          <p class="kpi-label">
-            <svg class="kpi-icon" aria-hidden="true" viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c.6-3.5 3.2-5.5 6.5-5.5s5.9 2 6.5 5.5"/><circle cx="17.5" cy="9.5" r="2.5"/><path d="M16 14.7c2.9.2 5 2 5.5 4.8"/></svg>
-            Fans in venue
-          </p>
-          <p class="kpi-value" id="kpi-occupancy">—</p>
-          <p class="kpi-hint" id="kpi-occupancy-hint"></p>
-          <svg class="kpi-spark" id="spark-occupancy" viewBox="0 0 120 36" preserveAspectRatio="none" aria-hidden="true"></svg>
-        </article>
-        <article class="card kpi">
-          <p class="kpi-label">
-            <svg class="kpi-icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M12 21s-7-6.2-7-11a7 7 0 0 1 14 0c0 4.8-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/></svg>
-            Busiest zone
-          </p>
-          <p class="kpi-value kpi-value-sm" id="kpi-busiest">—</p>
-          <p class="kpi-hint" id="kpi-busiest-hint"></p>
-          <svg class="kpi-donut" id="donut-busiest" viewBox="0 0 48 48" aria-hidden="true">
-            <circle class="donut-track" cx="24" cy="24" r="19"></circle>
-            <circle class="donut-fill" id="donut-fill" cx="24" cy="24" r="19" pathLength="100"></circle>
-            <text class="donut-text" id="donut-text" x="24" y="28" text-anchor="middle">—</text>
-          </svg>
-        </article>
-        <article class="card kpi">
-          <p class="kpi-label">
-            <svg class="kpi-icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M4 21V5a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v16"/><path d="M2 21h20M9 3v18M15 3v18"/></svg>
-            Fastest gate
-          </p>
-          <p class="kpi-value kpi-value-sm" id="kpi-gate">—</p>
-          <p class="kpi-hint" id="kpi-gate-hint"></p>
-          <svg class="kpi-spark" id="spark-gate" viewBox="0 0 120 36" preserveAspectRatio="none" aria-hidden="true"></svg>
-        </article>
-        <article class="card kpi">
-          <p class="kpi-label">
-            <svg class="kpi-icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 9a6 6 0 1 1 12 0c0 5 2 6 2 6H4s2-1 2-6"/><path d="M10 20a2 2 0 0 0 4 0"/></svg>
-            Active alerts
-          </p>
-          <p class="kpi-value" id="kpi-alerts">—</p>
-          <p class="kpi-hint" id="kpi-alerts-hint"></p>
-          <svg class="kpi-shield" id="alert-shield" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l7 3v6c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6z"/><path class="shield-check" d="M9 12l2 2 4-4"/></svg>
-        </article>
+      <!-- ================= Overview ================= -->
+      <section class="view" id="view-overview" aria-labelledby="title-overview">
+        <header class="page-head">
+          <div>
+            <p class="page-eyebrow">Control room</p>
+            <h2 class="page-title" id="title-overview" tabindex="-1">Overview</h2>
+            <p class="page-sub">Live venue posture at a glance — telemetry refreshes every 10 seconds. Open a page for the full picture.</p>
+          </div>
+        </header>
+
+        <section class="kpi-row" aria-label="Venue key indicators">
+          <article class="card kpi">
+            <p class="kpi-label">
+              <svg class="kpi-icon" aria-hidden="true" viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c.6-3.5 3.2-5.5 6.5-5.5s5.9 2 6.5 5.5"/><circle cx="17.5" cy="9.5" r="2.5"/><path d="M16 14.7c2.9.2 5 2 5.5 4.8"/></svg>
+              Fans in venue
+            </p>
+            <p class="kpi-value" id="kpi-occupancy">—</p>
+            <p class="kpi-hint" id="kpi-occupancy-hint"></p>
+            <svg class="kpi-spark" id="spark-occupancy" viewBox="0 0 120 36" preserveAspectRatio="none" aria-hidden="true"></svg>
+          </article>
+          <article class="card kpi">
+            <p class="kpi-label">
+              <svg class="kpi-icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M12 21s-7-6.2-7-11a7 7 0 0 1 14 0c0 4.8-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/></svg>
+              Busiest zone
+            </p>
+            <p class="kpi-value kpi-value-sm" id="kpi-busiest">—</p>
+            <p class="kpi-hint" id="kpi-busiest-hint"></p>
+            <svg class="kpi-donut" id="donut-busiest" viewBox="0 0 48 48" aria-hidden="true">
+              <circle class="donut-track" cx="24" cy="24" r="19"></circle>
+              <circle class="donut-fill" id="donut-fill" cx="24" cy="24" r="19" pathLength="100"></circle>
+              <text class="donut-text" id="donut-text" x="24" y="28" text-anchor="middle">—</text>
+            </svg>
+          </article>
+          <article class="card kpi">
+            <p class="kpi-label">
+              <svg class="kpi-icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M4 21V5a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v16"/><path d="M2 21h20M9 3v18M15 3v18"/></svg>
+              Fastest gate
+            </p>
+            <p class="kpi-value kpi-value-sm" id="kpi-gate">—</p>
+            <p class="kpi-hint" id="kpi-gate-hint"></p>
+            <svg class="kpi-spark" id="spark-gate" viewBox="0 0 120 36" preserveAspectRatio="none" aria-hidden="true"></svg>
+          </article>
+          <article class="card kpi">
+            <p class="kpi-label">
+              <svg class="kpi-icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 9a6 6 0 1 1 12 0c0 5 2 6 2 6H4s2-1 2-6"/><path d="M10 20a2 2 0 0 0 4 0"/></svg>
+              Active alerts
+            </p>
+            <p class="kpi-value" id="kpi-alerts">—</p>
+            <p class="kpi-hint" id="kpi-alerts-hint"></p>
+            <svg class="kpi-shield" id="alert-shield" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l7 3v6c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6z"/><path class="shield-check" d="M9 12l2 2 4-4"/></svg>
+          </article>
+        </section>
+
+        <nav class="page-cards" aria-label="Open a page">
+          <a class="page-card" href="#/crowd">
+            <span class="page-card-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c.6-3.5 3.2-5.5 6.5-5.5s5.9 2 6.5 5.5"/><circle cx="17.5" cy="9.5" r="2.5"/><path d="M16 14.7c2.9.2 5 2 5.5 4.8"/></svg></span>
+            <h3>Crowd intelligence</h3>
+            <p>Zone-by-zone density with status thresholds and an accessible table view.</p>
+            <span class="page-card-go">Open page →</span>
+          </a>
+          <a class="page-card" href="#/gates">
+            <span class="page-card-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 21V5a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v16"/><path d="M2 21h20M9 3v18M15 3v18"/></svg></span>
+            <h3>Gate management</h3>
+            <p>Queue lengths, wait estimates, and per-gate security throughput.</p>
+            <span class="page-card-go">Open page →</span>
+          </a>
+          <a class="page-card" href="#/briefings">
+            <span class="page-card-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 3l1.7 4.3L18 9l-4.3 1.7L12 15l-1.7-4.3L6 9l4.3-1.7z"/><path d="M18.5 15l.9 2.1 2.1.9-2.1.9-.9 2.1-.9-2.1-2.1-.9 2.1-.9z"/></svg></span>
+            <h3>AI briefings</h3>
+            <p>Prioritized, assignable staff actions generated from live telemetry.</p>
+            <span class="page-card-go">Open page →</span>
+          </a>
+          <a class="page-card" href="#/alerts">
+            <span class="page-card-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 9a6 6 0 1 1 12 0c0 5 2 6 2 6H4s2-1 2-6"/><path d="M10 20a2 2 0 0 0 4 0"/></svg></span>
+            <h3>Alerts</h3>
+            <p>Congestion and queue advisories, each with a recommended action.</p>
+            <span class="page-card-go">Open page →</span>
+          </a>
+          <a class="page-card" href="#/assistant">
+            <span class="page-card-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M21 12a8 8 0 0 1-8 8H4l2.2-2.9A8 8 0 1 1 21 12z"/><path d="M9 12h.01M12.5 12h.01M16 12h.01"/></svg></span>
+            <h3>Assistant</h3>
+            <p>Grounded fan chat in 10 languages, including RTL Arabic.</p>
+            <span class="page-card-go">Open page →</span>
+          </a>
+          <a class="page-card" href="#/navigator">
+            <span class="page-card-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M15.5 8.5l-2 5-5 2 2-5z"/></svg></span>
+            <h3>Step-free navigator</h3>
+            <p>Verified step-free routes with turn-by-turn GenAI narration.</p>
+            <span class="page-card-go">Open page →</span>
+          </a>
+        </nav>
       </section>
 
-      <div class="grid">
-        <!-- Crowd intelligence -->
-        <section class="card col-crowd" id="crowd-card" aria-labelledby="crowd-title">
-          <div class="card-head">
-            <h2 id="crowd-title">
-              <svg class="h2-icon" aria-hidden="true" viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c.6-3.5 3.2-5.5 6.5-5.5s5.9 2 6.5 5.5"/><circle cx="17.5" cy="9.5" r="2.5"/><path d="M16 14.7c2.9.2 5 2 5.5 4.8"/></svg>
-              Live crowd intelligence
-            </h2>
-            <span class="card-sub live-sub"><span class="pulse-dot" aria-hidden="true"></span><span id="crowd-updated"></span></span>
+      <!-- ================= Crowd intelligence ================= -->
+      <section class="view" id="view-crowd" aria-labelledby="title-crowd" hidden>
+        <header class="page-head">
+          <div>
+            <p class="page-eyebrow">Telemetry</p>
+            <h2 class="page-title" id="title-crowd" tabindex="-1">Crowd intelligence</h2>
+            <p class="page-sub">Zone density against capacity, classified low → critical. The table is the canonical non-visual view.</p>
           </div>
+          <span class="card-sub live-sub"><span class="pulse-dot" aria-hidden="true"></span><span id="crowd-updated"></span></span>
+        </header>
+        <section class="card" aria-label="Zone density">
           <h3 class="chart-title">Zone density · % of capacity</h3>
           <div id="zone-chart" class="bar-chart"></div>
-          <h3 class="chart-title" id="gate-section">Gate queues · estimated wait</h3>
-          <div id="gate-chart" class="bar-chart"></div>
           <details class="table-view">
             <summary>View as table</summary>
             <table id="crowd-table">
@@ -156,32 +204,74 @@
             </table>
           </details>
         </section>
+      </section>
 
-        <!-- Ops briefing + alerts -->
-        <section class="card col-ops" id="ops-card" aria-labelledby="ops-title">
-          <div class="card-head">
-            <h2 id="ops-title">
-              <svg class="h2-icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M12 3l1.7 4.3L18 9l-4.3 1.7L12 15l-1.7-4.3L6 9l4.3-1.7z"/><path d="M18.5 15l.9 2.1 2.1.9-2.1.9-.9 2.1-.9-2.1-2.1-.9 2.1-.9z"/></svg>
-              AI operations briefing
-            </h2>
-            <button class="btn btn-primary" id="briefing-btn">✦ Generate briefing</button>
+      <!-- ================= Gate management ================= -->
+      <section class="view" id="view-gates" aria-labelledby="title-gates" hidden>
+        <header class="page-head">
+          <div>
+            <p class="page-eyebrow">Telemetry</p>
+            <h2 class="page-title" id="title-gates" tabindex="-1">Gate management</h2>
+            <p class="page-sub">Queues and throughput per gate. Divert advisories for slow gates appear in Alerts.</p>
           </div>
+          <span class="card-sub live-sub"><span class="pulse-dot" aria-hidden="true"></span><span id="gates-updated"></span></span>
+        </header>
+        <section class="card" aria-label="Gate queues">
+          <h3 class="chart-title">Gate queues · estimated wait</h3>
+          <div id="gate-chart" class="bar-chart"></div>
+          <details class="table-view">
+            <summary>View as table</summary>
+            <table id="gate-table">
+              <caption class="visually-hidden">Gate queue details</caption>
+              <thead><tr><th scope="col">Gate</th><th scope="col">In queue</th><th scope="col">Est. wait</th><th scope="col">Throughput</th></tr></thead>
+              <tbody></tbody>
+            </table>
+          </details>
+        </section>
+      </section>
+
+      <!-- ================= AI briefings ================= -->
+      <section class="view view-narrow" id="view-briefings" aria-labelledby="title-briefings" hidden>
+        <header class="page-head">
+          <div>
+            <p class="page-eyebrow">GenAI · operations</p>
+            <h2 class="page-title" id="title-briefings" tabindex="-1">AI briefings</h2>
+            <p class="page-sub">A prioritized action plan for staff and volunteers, generated from the live telemetry in any supported language.</p>
+          </div>
+          <button class="btn btn-primary" id="briefing-btn">✦ Generate briefing</button>
+        </header>
+        <section class="card" aria-label="Generated briefing">
           <!-- dir="auto": RTL briefings (Arabic) align and punctuate correctly -->
           <div id="briefing-output" class="briefing" aria-live="polite" dir="auto">
             <p class="placeholder">Generate a prioritized action briefing for staff &amp; volunteers from the live telemetry — in any supported language.</p>
           </div>
-          <h3 class="chart-title" id="alert-section">Alert feed</h3>
+        </section>
+      </section>
+
+      <!-- ================= Alerts ================= -->
+      <section class="view view-narrow" id="view-alerts" aria-labelledby="title-alerts" hidden>
+        <header class="page-head">
+          <div>
+            <p class="page-eyebrow">Telemetry · advisories</p>
+            <h2 class="page-title" id="title-alerts" tabindex="-1">Alerts</h2>
+            <p class="page-sub">Derived from zone density and gate queues — every alert pairs severity with a concrete recommended action.</p>
+          </div>
+        </header>
+        <section class="card" aria-label="Alert feed">
           <ul id="alert-feed" class="alert-feed" aria-live="polite"></ul>
         </section>
+      </section>
 
-        <!-- Fan assistant -->
-        <section class="card col-chat" id="chat-card" aria-labelledby="chat-title">
-          <div class="card-head">
-            <h2 id="chat-title">
-              <svg class="h2-icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M21 12a8 8 0 0 1-8 8H4l2.2-2.9A8 8 0 1 1 21 12z"/><path d="M9 12h.01M12.5 12h.01M16 12h.01"/></svg>
-              Multilingual fan assistant
-            </h2>
+      <!-- ================= Assistant ================= -->
+      <section class="view view-narrow" id="view-assistant" aria-labelledby="title-assistant" hidden>
+        <header class="page-head">
+          <div>
+            <p class="page-eyebrow">GenAI · fan-facing</p>
+            <h2 class="page-title" id="title-assistant" tabindex="-1">Multilingual fan assistant</h2>
+            <p class="page-sub">Grounded in live venue state — answers about food, gates, accessibility, and transit in 10 languages.</p>
           </div>
+        </header>
+        <section class="card" aria-label="Fan assistant chat">
           <div id="chat-log" class="chat-log" aria-live="polite" aria-label="Conversation with the assistant">
             <div class="msg msg-bot">
               <p>¡Hola! Welcome to the World Cup 2026. Ask me anything — directions, food, accessibility services, transport — in your language.</p>
@@ -202,15 +292,18 @@
             <button class="btn btn-ghost quick" data-q="Where is the nearest accessible restroom and the elevator?">♿ Accessibility</button>
           </div>
         </section>
+      </section>
 
-        <!-- Navigator -->
-        <section class="card col-nav" id="nav-card" aria-labelledby="nav-title">
-          <div class="card-head">
-            <h2 id="nav-title">
-              <svg class="h2-icon" aria-hidden="true" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M15.5 8.5l-2 5-5 2 2-5z"/></svg>
-              Step-free navigator
-            </h2>
+      <!-- ================= Step-free navigator ================= -->
+      <section class="view view-narrow" id="view-navigator" aria-labelledby="title-navigator" hidden>
+        <header class="page-head">
+          <div>
+            <p class="page-eyebrow">Accessibility · wayfinding</p>
+            <h2 class="page-title" id="title-navigator" tabindex="-1">Step-free navigator</h2>
+            <p class="page-sub">Shortest walk between any two points — step-free by default, verified against the venue graph, narrated in your language.</p>
           </div>
+        </header>
+        <section class="card" aria-label="Route planner">
           <form id="nav-form" class="nav-form">
             <div class="nav-route-row">
               <label class="nav-field">From
@@ -233,7 +326,7 @@
             <p class="placeholder">Pick two places — StadiumIQ computes the shortest walk and narrates it turn-by-turn in your language.</p>
           </div>
         </section>
-      </div>
+      </section>
 
       <footer class="footer">
         <p>StadiumIQ · GenAI provider chain: <span class="footer-chain" id="footer-chain">NVIDIA NIM → Gemini → offline demo mode</span> · telemetry simulated deterministically for the demo</p>

@@ -29,6 +29,11 @@ replies align right and punctuate correctly inside the otherwise LTR page.
 
 - **Semantic structure:** landmarks (`header/main/footer`), labeled sections
   (`aria-labelledby`), real form labels, a skip-to-content link.
+- **Screen-reader-aware routing:** the seven pages are hash routes; each
+  navigation updates `document.title`, marks the sidebar link
+  `aria-current="page"`, and moves focus to the page heading
+  (`tabindex="-1"`) so the change is announced. Browser back/forward and
+  deep links work because routes are real URL fragments.
 - **Screen readers:** chat log, alert feed, briefing, and route results are
   `aria-live` regions; each chart bar carries an `aria-label` with name, value,
   and status; a full `<table>` alternative to the charts ships in the DOM.

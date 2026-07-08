@@ -30,6 +30,9 @@
 
 - Zero-build static UI: three files, no framework, no bundle — first paint is
   one HTML + one CSS + one JS fetch on a venue's congested Wi-Fi.
+- Page navigation is free: the seven pages are hash-routed views inside the
+  one document (~30 lines of JS), so switching pages costs zero network
+  requests and zero re-fetches of live state.
 - Dashboard polls only the **unmetered, computation-cheap** telemetry endpoint
   (every 10s); LLM endpoints fire only on explicit user action.
 - DOM updates use `replaceChildren` on scoped containers — no full re-renders.

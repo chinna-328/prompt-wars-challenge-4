@@ -47,6 +47,8 @@ routes  →  services  →  providers
 ## Frontend discipline
 
 - Zero-build vanilla JS: no framework, no bundler, nothing to bit-rot.
+- Pages are hash-routed views behind a ~30-line router — deep-linkable,
+  back/forward-safe, focus-managed — instead of pulling in a routing library.
 - All dynamic content inserted via `textContent`/`createElement` — a deliberate
   rule (see SECURITY.md) that also keeps rendering code uniform.
 - CSS custom properties define the design system once (`:root` tokens);

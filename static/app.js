@@ -242,7 +242,25 @@ function renderCrowd(snapshot) {
     )
   );
 
-  // Table view
+  // Gate table view (canonical non-visual reading of the gate chart)
+  $("gate-table").querySelector("tbody").replaceChildren(
+    ...snapshot.gates.map((g) => {
+      const tr = document.createElement("tr");
+      for (const text of [
+        g.name,
+        `${g.queue_length.toLocaleString()} fans`,
+        `${g.wait_minutes} min`,
+        `${g.throughput_per_min} fans/min`,
+      ]) {
+        const td = document.createElement("td");
+        td.textContent = text;
+        tr.append(td);
+      }
+      return tr;
+    })
+  );
+
+  // Zone table view
   const tbody = $("crowd-table").querySelector("tbody");
   tbody.replaceChildren(
     ...snapshot.zones.map((z) => {
@@ -291,6 +309,7 @@ function renderCrowd(snapshot) {
 
   const stamp = new Date().toLocaleTimeString();
   $("crowd-updated").textContent = `updated ${stamp}`;
+  $("gates-updated").textContent = `updated ${stamp}`;
   $("sys-updated").textContent = stamp;
 
   const worst = snapshot.alerts.length ? (critical ? "degraded" : "advisories") : "operational";
@@ -334,14 +353,41 @@ async function seedHistory() {
   renderCrowd(current);
 }
 
-/* ---------------- Sidebar section links ---------------- */
+/* ---------------- Router (hash-based pages) ---------------- */
 
-document.querySelectorAll(".side-link").forEach((link) =>
-  link.addEventListener("click", () => {
-    document.querySelectorAll(".side-link").forEach((l) => l.removeAttribute("aria-current"));
-    link.setAttribute("aria-current", "page");
-  })
-);
+/* Client-side routing with zero dependencies: each sidebar item is a real
+   page at #/<name>, so browser back/forward and deep links work. On
+   navigation we set document.title and move focus to the page heading
+   (tabindex="-1") so screen readers announce the change. */
+const ROUTES = {
+  "#/overview": { view: "view-overview", title: "Overview" },
+  "#/crowd": { view: "view-crowd", title: "Crowd intelligence" },
+  "#/gates": { view: "view-gates", title: "Gate management" },
+  "#/briefings": { view: "view-briefings", title: "AI briefings" },
+  "#/alerts": { view: "view-alerts", title: "Alerts" },
+  "#/assistant": { view: "view-assistant", title: "Assistant" },
+  "#/navigator": { view: "view-navigator", title: "Step-free navigator" },
+};
+
+function showPage(hash, { focus = true } = {}) {
+  const route = ROUTES[hash] || ROUTES["#/overview"];
+  document.querySelectorAll(".view").forEach((view) => {
+    view.hidden = view.id !== route.view;
+  });
+  document.querySelectorAll(".side-link").forEach((link) => {
+    if (ROUTES[link.getAttribute("href")] === route) {
+      link.setAttribute("aria-current", "page");
+    } else {
+      link.removeAttribute("aria-current");
+    }
+  });
+  document.title = `${route.title} · StadiumIQ`;
+  window.scrollTo(0, 0);
+  if (focus) document.querySelector(`#${route.view} .page-title`).focus();
+}
+
+window.addEventListener("hashchange", () => showPage(location.hash));
+showPage(location.hash, { focus: false }); // initial load: never steal focus
 
 /* ---------------- Ops briefing ---------------- */
 
