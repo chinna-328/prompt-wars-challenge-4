@@ -166,7 +166,8 @@
             </h2>
             <button class="btn btn-primary" id="briefing-btn">✦ Generate briefing</button>
           </div>
-          <div id="briefing-output" class="briefing" aria-live="polite">
+          <!-- dir="auto": RTL briefings (Arabic) align and punctuate correctly -->
+          <div id="briefing-output" class="briefing" aria-live="polite" dir="auto">
             <p class="placeholder">Generate a prioritized action briefing for staff &amp; volunteers from the live telemetry — in any supported language.</p>
           </div>
           <h3 class="chart-title" id="alert-section">Alert feed</h3>
@@ -188,7 +189,7 @@
           </div>
           <form id="chat-form" class="chat-form">
             <label class="visually-hidden" for="chat-input">Your message</label>
-            <input id="chat-input" type="text" maxlength="1000" required
+            <input id="chat-input" type="text" maxlength="1000" required dir="auto"
                    placeholder="e.g. Where is the nearest accessible restroom?" autocomplete="off">
             <button class="btn btn-primary btn-send" type="submit" id="chat-send" aria-label="Send message">
               <svg class="send-icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4z"/></svg>

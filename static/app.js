@@ -382,6 +382,9 @@ function addMessage(kind, text, meta) {
   const div = document.createElement("div");
   div.className = `msg msg-${kind}`;
   const p = document.createElement("p");
+  // dir="auto" lets each bubble pick its direction from its own content,
+  // so RTL (Arabic) replies align correctly in an otherwise LTR page.
+  p.setAttribute("dir", "auto");
   p.textContent = text;
   div.append(p);
   if (meta) {
@@ -520,6 +523,8 @@ $("nav-form").addEventListener("submit", async (event) => {
     if (data.directions) {
       const dir = document.createElement("div");
       dir.className = "route-directions";
+      // Narration follows the fan's language; render bidi-safe like chat.
+      dir.setAttribute("dir", "auto");
       dir.textContent = data.directions;
       out.append(dir);
       const tag = document.createElement("span");

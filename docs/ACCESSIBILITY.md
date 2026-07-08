@@ -20,8 +20,10 @@ diverse users and environments). StadiumIQ treats both as first-class.
 ## Multilingual by default
 
 All GenAI surfaces (chat, directions, briefings) operate in 10 languages
-including RTL Arabic — the browser's bidi handling renders RTL replies
-correctly because text is inserted as plain text nodes.
+including RTL Arabic. Every surface that renders GenAI text — chat bubbles,
+the briefing panel, narrated directions, and the chat input itself — carries
+`dir="auto"`, so each piece of content picks its own base direction: Arabic
+replies align right and punctuate correctly inside the otherwise LTR page.
 
 ## Interface accessibility (WCAG-conscious)
 
