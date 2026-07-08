@@ -34,7 +34,7 @@ dominate large-venue events:
 ## Who it serves
 
 - **Fans** — chat assistant, quick-asks, narrated accessible routes.
-- **Organizers & venue staff** — the control-room dashboard: KPIs, density charts, alert feed.
+- **Organizers & venue staff** — the control-room console: KPIs with live trends, bowl density map, gate boards, ranked priority actions, alert feed.
 - **Volunteers** — briefings written as plain, assignable actions, generated in any supported language (a Spanish-speaking volunteer crew gets their briefing in Spanish).
 
 ## Why GenAI (and not just dashboards)
