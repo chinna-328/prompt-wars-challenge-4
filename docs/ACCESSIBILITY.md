@@ -34,30 +34,35 @@ replies align right and punctuate correctly inside the otherwise LTR page.
   `aria-current="page"`, and moves focus to the page heading
   (`tabindex="-1"`) so the change is announced. Browser back/forward and
   deep links work because routes are real URL fragments.
-- **Screen readers:** chat log, alert feed, briefing, and route results are
-  `aria-live` regions; each chart bar carries an `aria-label` with name, value,
-  and status; a full `<table>` alternative to the charts ships in the DOM.
-- **Not color-alone:** zone status = color dot **+ icon + text label**
-  (`✓ low`, `▲ high`); alerts pair severity color with icon and text.
+- **Screen readers:** chat log, alert feed, briefing feed, and route results
+  are `aria-live` regions; zone and gate data ship as real `<table>` elements
+  (first-class cards, not hidden alternatives).
+- **Not color-alone:** every color-coded state carries its word — bowl cells
+  print the status label under the percentage, gate and zone statuses are
+  text tags, alerts pair the severity dot with a "Critical"/"Warning" tag,
+  and the bowl legend names each hue.
 - **Keyboard:** every interactive element is native (`button`, `select`,
-  `input`) with a visible `:focus-visible` outline; chart bars are focusable
-  and expose their tooltip content on focus.
-- **Motion & preferences:** `prefers-reduced-motion` disables all animation;
-  `color-scheme: dark` keeps native widgets consistent; layout is responsive
-  down to phone widths (volunteers work on phones).
-- **Contrast (computed, not eyeballed):** ink tokens #eef2fa / #b6c2d9 on the
-  #0b1120 card surface measure 16.8:1 and 10.5:1 (≥ 4.5:1 required); series
-  blue #3b82f6 measures 5.1:1 against the surface (≥ 3:1 for marks); button
-  text is white on #2563eb at 5.2:1. Status hues are the reserved dataviz set,
-  all ≥ 3:1 here, always paired with icon + label.
-- **KPI micro-charts are annotated duplicates:** sparklines and the density
-  donut are `aria-hidden` decorations of values that sit beside them as text,
-  and the full data table remains the canonical non-visual view.
+  `input`, `a`) with a visible `:focus-visible` outline.
+- **Motion & preferences:** `prefers-reduced-motion` disables all animation
+  (including the LIVE pulse and page transitions); `color-scheme: dark` keeps
+  native widgets consistent; layout is responsive down to phone widths
+  (volunteers work on phones).
+- **Contrast (computed, not eyeballed):** on the #0f1520 card surface, ink
+  #e8edf4 = 15.5:1 and body #aeb7c4 = 9.0:1; muted text was **lifted from the
+  source design's #6b7688 (3.98:1, fails) to #7c8798 (5.0:1, passes)**; accent
+  green #34d17e = 9.2:1, amber = 9.0:1, red = 4.9:1, blue = 5.0:1 (all ≥ 4.5:1
+  even at tag sizes); button/bubble text #08160f on the green gradient = 9.3:1.
+- **The occupancy sparkline is an annotated duplicate:** it is `aria-hidden`
+  decoration of the live percentage that sits beside it as text, and the zone
+  table remains the canonical non-visual view.
 - **Step-free routing is the default:** the navigator's "step-free route only"
   toggle ships checked — accessible routing is opt-out, not opt-in.
 
 ## Environments
 
 - Runs offline with zero keys (demo mode) — judgeable anywhere.
-- No CDN dependencies: works on air-gapped venue networks.
-- Three static files, no framework — usable on low-end devices and slow Wi-Fi.
+- No CDN dependencies: fonts are self-hosted woff2 subsets (56 KB,
+  `font-display: swap` so text renders immediately) — works on air-gapped
+  venue networks.
+- Three code files plus fonts, no framework — usable on low-end devices and
+  slow Wi-Fi.

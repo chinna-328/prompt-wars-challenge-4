@@ -28,8 +28,10 @@
 
 ## Network & frontend
 
-- Zero-build static UI: three files, no framework, no bundle — first paint is
-  one HTML + one CSS + one JS fetch on a venue's congested Wi-Fi.
+- Zero-build static UI: three code files, no framework, no bundle — first
+  paint is one HTML + one CSS + one JS fetch on a venue's congested Wi-Fi.
+  The two typefaces are self-hosted woff2 subsets totalling 56 KB
+  (`font-display: swap`, immutable-cacheable, no CDN round-trip).
 - Page navigation is free: the seven pages are hash-routed views inside the
   one document (~30 lines of JS), so switching pages costs zero network
   requests and zero re-fetches of live state.

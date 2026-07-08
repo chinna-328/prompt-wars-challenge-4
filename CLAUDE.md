@@ -14,7 +14,7 @@ where the code backs it; keep code and docs in lockstep.
 | Security | Medium | [docs/SECURITY.md](docs/SECURITY.md) | Pydantic bounds on all input; **no `innerHTML` ever** (textContent only); keys as `SecretStr`, never in URLs or logs; CSP + security headers stay on every response; fan text stays fenced in prompts |
 | Efficiency | Medium | [docs/EFFICIENCY.md](docs/EFFICIENCY.md) | Async I/O with the shared httpx client; LLM calls cached (briefings) and rate-limited; dashboard polls only unmetered endpoints; no framework/bundle added to the frontend |
 | Testing | Low | [docs/TESTING.md](docs/TESTING.md) | Suite stays offline (mock provider path); new features land with tests; the gate→seat step-free reachability test must keep passing |
-| Accessibility | Low | [docs/ACCESSIBILITY.md](docs/ACCESSIBILITY.md) | Status never color-alone (dot + icon + text); aria-live on dynamic regions; table alternative for charts; `prefers-reduced-motion` respected; step-free routing guarantee intact |
+| Accessibility | Low | [docs/ACCESSIBILITY.md](docs/ACCESSIBILITY.md) | Status never color-alone (every colored state carries its text label); aria-live on dynamic regions; zone/gate data as real tables; `prefers-reduced-motion` respected; step-free routing guarantee intact |
 
 ## Commands
 
@@ -29,7 +29,8 @@ docker compose up --build        # containerized run
 FastAPI app (`app/main.py` factory) → thin routes (`app/routes/api.py`) →
 services (navigation graph, deterministic crowd simulator, GenAI orchestration)
 → provider chain (`NVIDIA NIM → Gemini → offline mock`, `app/providers/`).
-Venue map is data (`app/data/stadium.json`). UI is three static files
+Venue map is data (`app/data/stadium.json`). UI is three static files plus
+self-hosted fonts
 (`static/`), no build step, CSP-strict (no inline script/style — dynamic styling
 goes through CSSOM property assignment in JS).
 
