@@ -54,7 +54,7 @@ pytest
 ## Architecture
 
 ```
-static/          Zero-build dashboard UI (semantic HTML, WCAG-conscious)
+static/          Zero-build UI — seven hash-routed pages (semantic HTML, WCAG-conscious)
 app/
   main.py        App factory, middleware, static hosting
   config.py      Typed settings (pydantic-settings, env-driven)

@@ -312,9 +312,23 @@ function renderCrowd(snapshot) {
   $("gates-updated").textContent = `updated ${stamp}`;
   $("sys-updated").textContent = stamp;
 
-  const worst = snapshot.alerts.length ? (critical ? "degraded" : "advisories") : "operational";
-  $("sys-status").textContent = "All systems";
-  $("sys-substatus").textContent = worst;
+  // System badge: title, detail, and icon tint must always agree — the text
+  // carries the state (never color alone) and the color merely echoes it.
+  const warnings = snapshot.alerts.length - critical;
+  let sysTitle = "All systems";
+  let sysSub = "operational";
+  if (critical) {
+    sysTitle = "Critical alerts";
+    sysSub = `${critical} critical · ${warnings} warning${warnings === 1 ? "" : "s"}`;
+  } else if (snapshot.alerts.length) {
+    sysTitle = "Advisories active";
+    sysSub = `${snapshot.alerts.length} warning${snapshot.alerts.length === 1 ? "" : "s"}`;
+  }
+  $("sys-status").textContent = sysTitle;
+  $("sys-substatus").textContent = sysSub;
+  const sysIcon = document.querySelector(".sys-icon");
+  sysIcon.classList.toggle("sys-icon-critical", critical > 0);
+  sysIcon.classList.toggle("sys-icon-alert", critical === 0 && snapshot.alerts.length > 0);
 }
 
 /* 10-second poll of the unmetered telemetry endpoint (never the LLM ones). */

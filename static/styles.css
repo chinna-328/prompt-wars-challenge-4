@@ -149,6 +149,8 @@ body {
   background: var(--surface-2); border: 1px solid var(--hairline);
 }
 .sys-icon { width: 26px; height: 26px; flex: none; stroke: var(--status-good); stroke-width: 1.8; fill: none; stroke-linecap: round; stroke-linejoin: round; }
+.sys-icon.sys-icon-alert { stroke: var(--status-warning); }
+.sys-icon.sys-icon-critical { stroke: var(--status-critical); }
 .sys-title { margin: 0; font-size: 13px; font-weight: 600; }
 .sys-sub { margin: 0; font-size: 11.5px; color: var(--ink-muted); }
 .sys-updated { margin: 10px 4px 0; font-size: 11.5px; color: var(--ink-muted); }
